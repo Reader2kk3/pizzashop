@@ -1,0 +1,41 @@
+{% extends 'pizzashopapp/base.html' %}
+
+{% block page_add %}
+<div class="panel">
+    <div class="panel-heading bg-ruby">
+        <h4 class="panel-title text-center text-white">
+            Пиццы
+        </h4>
+    </div>
+    <div class="panel-body">
+        <div class="text-right">
+            <a href="{% url 'pizzashop_add_pizza' %}" class="btn btn-red">Добавить пиццу</a>
+            <br/>
+        </div>
+        <table class="table table-bordered table-hover table-striped">
+            <thead>
+                <tr class="bg-red text-white">
+                    <th>ID</th>
+                    <th>Наименование</th>
+                    <th>Короткая информация</th>
+                    <th>Цена</th>
+                    <th class="text-center">Изображение</th>
+                </tr>
+            </thead>
+            <br/>
+            <tbody>
+                {% for pizza in pizzas %}
+                    <tr>
+                        <td scope="row">{{ pizza.id }}</td>
+                        <td class="text-center"><a href="{% url 'pizzashop_edit_pizza' pizza.id %}">{{ pizza.name }}</a></td>
+                        <td class="text-center">{{ pizza.short_description }}</td>
+                        <td class="text-center">{{ pizza.price }}</td>
+                        <td class="text-center"><img class="img-rounded" 
+                            src="{{ MEDIA_URL }}{{ pizza.img }}" width="50" height="50"></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
