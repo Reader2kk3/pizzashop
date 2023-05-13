@@ -6,47 +6,35 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from .models import Pizza
 
-# Переход после авторизации пользователя
+# Главная страница
 def home(request):
     return redirect(pizzashop_home)
-
 
 # Главная страница
 @login_required(login_url='/pizzashop/sing-in/')
 def pizzashop_home(request):
     return redirect(pizzashop_pizza)
 
-
 # Регистрация пользователя
 def pizzashop_sing_up(request):
     user_form = UserForm()
     pizzashop_form = PizzaShopForm()
 
-    # Если метод перадачи данных == POST, то ...
     if request.method == 'POST':
         user_form = UserForm(request.POST)
         pizzashop_form = PizzaShopForm(request.POST, request.FILES)
 
-        # Если поля валидны, то
         if user_form.is_valid() and pizzashop_form.is_valid():
-            # Создаем нового пользователя
             new_user = User.objects.create_user(**user_form.cleaned_data)
-            # Создаем новую пиццерию
             new_pizzashop = pizzashop_form.save(commit=False)
-            # Владелец пиццерии == созданному пользователю
             new_pizzashop.owner = new_user
-            # Сохраняем изменения
             new_pizzashop.save()
 
-            # cleaned_data - это результат вызова очищающих и валидирующих функций. 
-
-            # Вход
             login(request, authenticate(
                 username = user_form.cleaned_data['username'],
                 password = user_form.cleaned_data['password'],
             ))
 
-            # Перенаправление на домашную страницу
             return redirect(pizzashop_home)
 
     context = {'user_form': user_form, 'pizzashop_form': pizzashop_form}
